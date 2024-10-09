@@ -36,7 +36,6 @@ class SendUserUpdates extends Command
             return;
         }
 
-        // Split into batches of 1000 records each
         $batches = $users->chunk(1000);
 
         foreach ($batches as $batch) {
@@ -63,7 +62,6 @@ class SendUserUpdates extends Command
         ]);
 
         if ($response->successful()) {
-            // Mark users as processed
             DB::table('users')->whereIn('id', $batch->pluck('id'))->update(['needs_update' => false]);
             $this->info('Batch sent successfully.');
         } else {
